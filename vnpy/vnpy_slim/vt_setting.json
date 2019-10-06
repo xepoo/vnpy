@@ -1,0 +1,8 @@
+{
+  "database.driver": "mongodb",
+  "database.host": "localhost",
+  "database.port": 27017,
+  "database.authentication_source": "admin",
+  "database.database": "",
+  "database.user": ""
+}
