@@ -6,7 +6,7 @@ import csv
 
 engine = CsvLoaderEngine(None, None)
 engine.load_by_handle(
-    open("shfe.cu1802_min.csv", "r"),
+    open("cu1802_min.csv", "r"),
     symbol="cu1802",
     exchange=Exchange.SHFE,
     interval=Interval.MINUTE,
