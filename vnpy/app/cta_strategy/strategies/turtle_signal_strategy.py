@@ -15,9 +15,12 @@ class TurtleSignalStrategy(CtaTemplate):
     """"""
     author = "用Python的交易员"
 
+    # 唐奇安上下轨突破的周期,买入位置
     entry_window = 20
+    # 唐奇安通道,卖出位置
     exit_window = 10
     atr_window = 20
+    # 乘数，每次下单的单位大小
     fixed_size = 1
 
     entry_up = 0
@@ -26,8 +29,10 @@ class TurtleSignalStrategy(CtaTemplate):
     exit_down = 0
     atr_value = 0
 
+    # 多头入场价，每次交易后，设置为当前交易价格
     long_entry = 0
     short_entry = 0
+    # 多头止损价格
     long_stop = 0
     short_stop = 0
 
@@ -72,6 +77,7 @@ class TurtleSignalStrategy(CtaTemplate):
         """
         Callback of new bar data update.
         """
+        # 取消之前未成交的单子
         self.cancel_all()
 
         self.am.update_bar(bar)
@@ -79,6 +85,7 @@ class TurtleSignalStrategy(CtaTemplate):
             return
 
         # Only calculates new entry channel when no position holding
+        # 没有持仓时才计算入场价
         if not self.pos:
             self.entry_up, self.entry_down = self.am.donchian(
                 self.entry_window
@@ -94,18 +101,25 @@ class TurtleSignalStrategy(CtaTemplate):
             self.long_stop = 0
             self.short_stop = 0
 
+            # 下本地止损单，等到突破或者跌破成交
             self.send_buy_orders(self.entry_up)
             self.send_short_orders(self.entry_down)
         elif self.pos > 0:
+            # 如果之前有多头突破单成交，下单，根据atr加仓.
+            # 不用考虑历史仓位，默认前面都是按照规则正确下单成交的仓位，不考虑未成交情况
             self.send_buy_orders(self.entry_up)
 
+            # 止损价和止盈退出价中的大的一方
             sell_price = max(self.long_stop, self.exit_down)
+            # 下多头止盈单
             self.sell(sell_price, abs(self.pos), True)
 
         elif self.pos < 0:
+            # 如果之前有空仓，加仓
             self.send_short_orders(self.entry_down)
 
             cover_price = min(self.short_stop, self.exit_up)
+            # 下空头止盈单
             self.cover(cover_price, abs(self.pos), True)
 
         self.put_event()
@@ -114,8 +128,10 @@ class TurtleSignalStrategy(CtaTemplate):
         """
         Callback of new trade data update.
         """
+        print(f"海龟交易,{trade.tradeid}, {trade.price}, {trade.direction}, {trade.time}")
         if trade.direction == Direction.LONG:
             self.long_entry = trade.price
+            # 修改多头止损价格
             self.long_stop = self.long_entry - 2 * self.atr_value
         else:
             self.short_entry = trade.price
