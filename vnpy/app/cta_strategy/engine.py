@@ -38,6 +38,7 @@ from vnpy.trader.constant import (
 from vnpy.trader.utility import load_json, save_json, extract_vt_symbol, round_to
 from vnpy.trader.database import database_manager
 from vnpy.trader.rqdata import rqdata_client
+from vnpy.gateway.tianqin import tqdata
 from vnpy.trader.converter import OffsetConverter
 
 from .base import (
@@ -144,6 +145,58 @@ class CtaEngine(BaseEngine):
         )
         data = rqdata_client.query_history(req)
         return data
+
+    def query_bar_from_tq(
+        self, symbol: str, exchange: Exchange, interval: Interval, start: datetime, end: datetime
+    ):
+
+        data = rqdata_client.query_history(symbol=symbol, exchange=exchange, interval=interval, start=start, end=end)
+        return data
+
+    # from tqsdk import TqApi, TqSim
+    # from tqsdk.tools import DataDownloader
+    #
+    # from vnpy.app.csv_loader import CsvLoaderEngine
+    # from vnpy.trader.constant import Exchange, Interval
+    # import os
+    #
+    # api = TqApi(TqSim())
+    # set_csv_path = "D:\\SynologyDrive\\future_data\\"
+    # set_exchange = Exchange.SHFE.value
+    # set_symbol = "cu1802"
+    # set_bar_sec = 60
+    # set_start_date = datetime(2017, 2, 1, 6, 0, 0)
+    # set_end_date = datetime(2018, 3, 1, 6, 0, 0)
+    # set_csv_file_name = set_csv_path + set_exchange + '_' + set_symbol + '_' + str(
+    #     set_bar_sec) + '_' + set_start_date.strftime("%Y%m%d%H%M%S") + '_' + set_end_date.strftime(
+    #     "%Y%m%d%H%M%S") + ".csv"
+    #
+    # if os.path.exists(set_csv_file_name):
+    #     print(set_csv_file_name + "已存在，删除")
+    #     os.remove(set_csv_file_name)
+    #
+    # download_tasks = {}
+    # # 下载从 2018-01-01凌晨6点 到 2018-06-01下午4点 的 cu1805,cu1807,IC1803 分钟线数据，所有数据按 cu1805 的时间对齐
+    # # 例如 cu1805 夜盘交易时段, IC1803 的各项数据为 N/A
+    # # 例如 cu1805 13:00-13:30 不交易, 因此 IC1803 在 13:00-13:30 之间的K线数据会被跳过
+    # download_tasks["cu_min"] = DataDownloader(api, symbol_list=[set_exchange + '.' + set_symbol], dur_sec=set_bar_sec,
+    #                                           start_dt=set_start_date, end_dt=set_end_date,
+    #                                           csv_file_name=set_csv_file_name)
+    # engine = CsvLoaderEngine(None, None)
+    # engine.load_by_handle(
+    #     open(set_csv_file_name, "r"),
+    #     symbol=set_symbol,
+    #     exchange=Exchange.SHFE,
+    #     interval=Interval.MINUTE,
+    #     datetime_head="datetime",
+    #     open_head=set_exchange + '.' + set_symbol + ".open",
+    #     close_head=set_exchange + '.' + set_symbol + ".close",
+    #     low_head=set_exchange + '.' + set_symbol + ".low",
+    #     high_head=set_exchange + '.' + set_symbol + ".high",
+    #     volume_head=set_exchange + '.' + set_symbol + ".volume",
+    #     datetime_format="%Y-%m-%d %H:%M:%S.000000000",
+    # )
+    # engine.close()
 
     def process_tick_event(self, event: Event):
         """"""
@@ -536,7 +589,8 @@ class CtaEngine(BaseEngine):
 
         # Try to query bars from RQData, if not found, load from database.
         else:
-            bars = self.query_bar_from_rq(symbol, exchange, interval, start, end)
+            #bars = self.query_bar_from_rq(symbol, exchange, interval, start, end)
+            bars = self.query_bar_from_tq(symbol, exchange, interval, start, end)
 
         if not bars:
             bars = database_manager.load_bar_data(

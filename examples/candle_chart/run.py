@@ -9,11 +9,11 @@ if __name__ == "__main__":
     app = create_qapp()
 
     bars = database_manager.load_bar_data(
-        "IF88",
-        Exchange.CFFEX,
+        "cu1802",
+        Exchange.SHFE,
         interval=Interval.MINUTE,
-        start=datetime(2019, 7, 1),
-        end=datetime(2019, 7, 17)
+        start=datetime(2017, 3, 1),
+        end=datetime(2018, 2, 1)
     )
 
     widget = ChartWidget()
@@ -23,7 +23,7 @@ if __name__ == "__main__":
     widget.add_item(VolumeItem, "volume", "volume")
     widget.add_cursor()
 
-    n = 1000
+    n = 100000
     history = bars[:n]
     new_data = bars[n:]
 

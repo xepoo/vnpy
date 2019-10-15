@@ -10,6 +10,7 @@ from vnpy.trader.engine import MainEngine
 from vnpy.gateway.ctp import CtpGateway
 from vnpy.app.cta_strategy import CtaStrategyApp
 from vnpy.app.cta_strategy.base import EVENT_CTA_LOG
+from vnpy.app.cta_strategy.strategies.atr_rsi_strategy import AtrRsiStrategy
 
 
 SETTINGS["log.active"] = True
@@ -18,11 +19,11 @@ SETTINGS["log.console"] = True
 
 
 ctp_setting = {
-    "用户名": "",
-    "密码": "",
-    "经纪商代码": "",
-    "交易服务器": "",
-    "行情服务器": "",
+    "用户名": "152402",
+    "密码": "baiyun18",
+    "经纪商代码": "9999",
+    "交易服务器": "180.168.146.187:10130",
+    "行情服务器": "180.168.146.187:10131",
     "产品名称": "",
     "授权编码": "",
     "产品信息": ""
@@ -49,8 +50,19 @@ def run_child():
     main_engine.write_log("连接CTP接口")
 
     sleep(10)
-
     cta_engine.init_engine()
+    #cta_engine.add_strategy(class_name='AtrRsiStrategy', strategy_name='TestStrategy1910', vt_symbol='cu1910.SHFE', setting={})
+    cta_engine.add_strategy(class_name='AtrRsiStrategy', strategy_name='TestStrategy1911', vt_symbol='cu1911.SHFE', setting={})
+    # cta_engine.add_strategy(class_name='AtrRsiStrategy', strategy_name='TestStrategy1912', vt_symbol='cu1912.SHFE', setting={})
+    # cta_engine.add_strategy(class_name='AtrRsiStrategy', strategy_name='TestStrategy2001', vt_symbol='cu2001.SHFE', setting={})
+    # cta_engine.add_strategy(class_name='AtrRsiStrategy', strategy_name='TestStrategy2002', vt_symbol='cu2002.SHFE', setting={})
+    # cta_engine.add_strategy(class_name='AtrRsiStrategy', strategy_name='TestStrategy2003', vt_symbol='cu2003.SHFE', setting={})
+    # cta_engine.add_strategy(class_name='AtrRsiStrategy', strategy_name='TestStrategy2004', vt_symbol='cu2004.SHFE', setting={})
+    # cta_engine.add_strategy(class_name='AtrRsiStrategy', strategy_name='TestStrategy2005', vt_symbol='cu2005.SHFE', setting={})
+    # cta_engine.add_strategy(class_name='AtrRsiStrategy', strategy_name='TestStrategy2006', vt_symbol='cu2006.SHFE', setting={})
+    # cta_engine.add_strategy(class_name='AtrRsiStrategy', strategy_name='TestStrategy2007', vt_symbol='cu2007.SHFE', setting={})
+    # cta_engine.add_strategy(class_name='AtrRsiStrategy', strategy_name='TestStrategy2008', vt_symbol='cu2008.SHFE', setting={})
+    # cta_engine.add_strategy(class_name='AtrRsiStrategy', strategy_name='TestStrategy2009', vt_symbol='cu2009.SHFE', setting={})
     main_engine.write_log("CTA策略初始化完成")
 
     cta_engine.init_all_strategies()
