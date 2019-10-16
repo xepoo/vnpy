@@ -590,9 +590,6 @@ class CtaEngine(BaseEngine):
         # Try to query bars from RQData, if not found, load from database.
         else:
             #bars = self.query_bar_from_rq(symbol, exchange, interval, start, end)
-            bars = self.query_bar_from_tq(symbol, exchange, interval, start, end)
-
-        if not bars:
             bars = database_manager.load_bar_data(
                 symbol=symbol,
                 exchange=exchange,
@@ -600,6 +597,10 @@ class CtaEngine(BaseEngine):
                 start=start,
                 end=end,
             )
+
+        if not bars:
+            #从天勤查询并入库
+            bars = self.query_bar_from_tq(symbol, exchange, interval, start, end)
 
         for bar in bars:
             callback(bar)

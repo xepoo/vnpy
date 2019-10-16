@@ -15,10 +15,10 @@ INTERVAL_2_SEC_MAP = {
     Interval.DAILY: 86400
 }
 
-class Tqdata:
+class TqdataApi:
     def __init__(self):
         """"""
-        api = TqApi(TqSim())
+        self.api = TqApi(TqSim())
 
     def init(self):
         """"""

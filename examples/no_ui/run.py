@@ -10,8 +10,6 @@ from vnpy.trader.engine import MainEngine
 from vnpy.gateway.ctp import CtpGateway
 from vnpy.app.cta_strategy import CtaStrategyApp
 from vnpy.app.cta_strategy.base import EVENT_CTA_LOG
-from vnpy.app.cta_strategy.strategies.atr_rsi_strategy import AtrRsiStrategy
-
 
 SETTINGS["log.active"] = True
 SETTINGS["log.level"] = INFO
@@ -28,7 +26,6 @@ ctp_setting = {
     "授权编码": "",
     "产品信息": ""
 }
-
 
 def run_child():
     """
