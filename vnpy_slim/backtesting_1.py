@@ -1,5 +1,6 @@
 from vnpy.app.cta_strategy.backtesting import BacktestingEngine, OptimizationSetting
 from vnpy.app.cta_strategy.strategies.atr_rsi_strategy import AtrRsiStrategy
+from vnpy.app.cta_strategy.strategies.double_ma_strategy import DoubleMaStrategy
 from vnpy.app.cta_strategy.strategies.turtle_signal_strategy import TurtleSignalStrategy
 from datetime import datetime
 engine = BacktestingEngine()
@@ -15,7 +16,7 @@ engine.set_parameters(
     capital=1_000_000,
 )
 engine.add_strategy(AtrRsiStrategy, {})
-#engine.add_strategy(TurtleSignalStrategy, {})
+#engine.add_strategy(DoubleMaStrategy, {})
 engine.load_data()
 engine.run_backtesting()
 df = engine.calculate_result()
