@@ -38,7 +38,7 @@ from vnpy.trader.constant import (
 from vnpy.trader.utility import load_json, save_json, extract_vt_symbol, round_to
 from vnpy.trader.database import database_manager
 from vnpy.trader.rqdata import rqdata_client
-from vnpy.gateway.tianqin import tqdata
+from vnpy.trader.tqdata import tqdata_api
 from vnpy.trader.converter import OffsetConverter
 
 from .base import (
@@ -149,8 +149,14 @@ class CtaEngine(BaseEngine):
     def query_bar_from_tq(
         self, symbol: str, exchange: Exchange, interval: Interval, start: datetime, end: datetime
     ):
-
-        data = rqdata_client.query_history(symbol=symbol, exchange=exchange, interval=interval, start=start, end=end)
+        req = HistoryRequest(
+            symbol=symbol,
+            exchange=exchange,
+            interval=interval,
+            start=start,
+            end=end
+        )
+        data = tqdata_api.query_history(req)
         return data
 
     # from tqsdk import TqApi, TqSim

@@ -12,6 +12,7 @@ from vnpy.trader.constant import Interval
 from vnpy.trader.utility import extract_vt_symbol
 from vnpy.trader.object import HistoryRequest
 from vnpy.trader.rqdata import rqdata_client
+from vnpy.trader.tqdata import tqdata_api
 from vnpy.trader.database import database_manager
 from vnpy.app.cta_strategy import (
     CtaTemplate,
@@ -79,11 +80,17 @@ class BacktesterEngine(BaseEngine):
         """
         app_path = Path(__file__).parent.parent
         path1 = app_path.joinpath("cta_strategy", "strategies")
+        print(path1)
         self.load_strategy_class_from_folder(
             path1, "vnpy.app.cta_strategy.strategies")
 
         path2 = Path.cwd().joinpath("strategies")
         self.load_strategy_class_from_folder(path2, "strategies")
+
+        #自定义路径
+        path3 = app_path.parent.parent.joinpath("vnpy_slim","strategies")
+        print(path3)
+        self.load_strategy_class_from_folder(path3, "vnpy_slim.strategies")
 
     def load_strategy_class_from_folder(self, path: Path, module_name: str = ""):
         """
@@ -92,6 +99,7 @@ class BacktesterEngine(BaseEngine):
         for dirpath, dirnames, filenames in os.walk(path):
             for filename in filenames:
                 # Load python source code file
+                print(filename)
                 if filename.endswith(".py"):
                     strategy_module_name = ".".join(
                         [module_name, filename.replace(".py", "")])
@@ -106,6 +114,7 @@ class BacktesterEngine(BaseEngine):
         """
         Load strategy class from module file.
         """
+        print(module_name)
         try:
             module = importlib.import_module(module_name)
 
@@ -378,7 +387,8 @@ class BacktesterEngine(BaseEngine):
                 )
             # Otherwise use RQData to query data
             else:
-                data = rqdata_client.query_history(req)
+                #data = rqdata_client.query_history(req)
+                data = tqdata_api.query_history(req)
 
             if data:
                 database_manager.save_bar_data(data)

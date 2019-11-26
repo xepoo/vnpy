@@ -4,9 +4,10 @@ from vnpy.app.cta_strategy import (
     ArrayManager
 )
 from vnpy.trader.object import (
-    BarData
+    BarData,
+    TickData
 )
-from typing import Any, Callable
+from typing import Any
 
 class DemoStrategy(CtaTemplate):
     """
@@ -17,7 +18,7 @@ class DemoStrategy(CtaTemplate):
     #快速均线窗口
     fast_window = 10
     #慢速均线窗口
-    low_window = 20
+    slow_window = 20
 
     #定义变量
     fast_ma0 = 0.0
@@ -25,17 +26,15 @@ class DemoStrategy(CtaTemplate):
     slow_ma0 = 0.0
     slow_ma1 = 0.0
 
-    parameters = {
-        'fast_window',
-        'slow_window'
-    }
+    parameters = ['fast_window','slow_window']
 
-    variables = {
+
+    variables = [
         'fast_ma0',
         'fast_ma1',
         'slow_ma0',
         'slow_ma1',
-    }
+    ]
 
     def __init__(
         self,
@@ -63,6 +62,10 @@ class DemoStrategy(CtaTemplate):
         """停止"""
         self.write_log("策略停止")
 
+    def on_tick(self, tick: TickData):
+        """TICK更新"""
+        self.bg.update_tick(tick)
+
     def on_bar(self, bar: BarData):
         """K线更新"""
         am = self.am
@@ -72,12 +75,12 @@ class DemoStrategy(CtaTemplate):
 
         #计算技术指标
         fast_ma = am.sma(self.fast_window, array=True)
-        fast_ma0 = fast_ma[-1]
-        fast_ma1 = fast_ma[-2]
+        self.fast_ma0 = fast_ma[-1]
+        self.fast_ma1 = fast_ma[-2]
 
-        low_ma = am.sma(self.low_window, array=True)
-        low_ma0 = low_ma[-1]
-        low_ma1 = low_ma[-2]
+        slow_ma = am.sma(self.slow_window, array=True)
+        self.slow_ma0 = slow_ma[-1]
+        self.slow_ma1 = slow_ma[-2]
 
         #判断均线交叉
         #金叉
@@ -89,14 +92,19 @@ class DemoStrategy(CtaTemplate):
 
         if cross_over:
             price = bar.close_price + 5
-
             if not self.pos:
                 self.buy(price,1)
             elif self.pos < 0:
                 self.cover(price,1)
                 self.buy(price,1)
-            elif cross_below:
-                price = bar.close_price - 5
-                if not self.pos:
-                    self.short(price,1)
+        elif cross_below:
+            price = bar.close_price - 5
+            if not self.pos:
+                self.short(price,1)
+            elif self.pos > 0:
+                self.sell(price,1)
+                self.short(price,1)
+        
+        #更新图像界面
+        self.put_event()
                     

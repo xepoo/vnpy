@@ -81,8 +81,15 @@ class TqdataApi:
         )
         engine.close()
 
-
-    def query_history(self, symbol:str, exchange:Exchange, interval:Interval, start:datetime, end:datetime):
+    def query_history(self, req: HistoryRequest):
+        """
+        Query history bar data from RQData.
+        """
+        symbol = req.symbol
+        exchange = req.exchange
+        interval = req.interval
+        start = req.start
+        end = req.end
 
         self.download_bar(symbol=symbol, exchange=exchange, interval=interval, start_dt=start, end_dt=end)
         self.data_csv2db(symbol=symbol, exchange=exchange, interval=interval, start_dt=start, end_dt=end)
@@ -94,3 +101,5 @@ class TqdataApi:
             end=end,
         )
         return bars
+
+tqdata_api = TqdataApi()
