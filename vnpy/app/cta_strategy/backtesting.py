@@ -33,6 +33,7 @@ sns.set_style("whitegrid")
 creator.create("FitnessMax", base.Fitness, weights=(1.0,))
 creator.create("Individual", list, fitness=creator.FitnessMax)
 
+file_name = "log" + datetime.now().strftime("%Y-%m-%d-%H-%M-%S") + '.txt'
 
 class OptimizationSetting:
     """
@@ -144,6 +145,8 @@ class BacktestingEngine:
         self.daily_results = {}
         self.daily_df = None
 
+        self.f = open(file_name, 'a+')
+
     def clear_data(self):
         """
         Clear all data of last backtesting.
@@ -252,12 +255,12 @@ class BacktestingEngine:
             progress += progress_delta / total_delta
             progress = min(progress, 1)
             progress_bar = "#" * int(progress * 10)
-            self.output(f"加载进度：{progress_bar} [{progress:.0%}]")
+            #self.output(f"加载进度：{progress_bar} [{progress:.0%}]")
 
             start = end + interval_delta
             end += (progress_delta + interval_delta)
 
-        self.output(f"历史数据加载完成，数据量：{len(self.history_data)}")
+        #self.output(f"历史数据加载完成，数据量：{len(self.history_data)}")
 
     def run_backtesting(self):
         """"""
@@ -503,23 +506,29 @@ class BacktestingEngine:
         if df is None:
             return
 
-        plt.figure(figsize=(10, 16))
+        plt.figure(figsize=(20, 20))
 
-        balance_plot = plt.subplot(4, 1, 1)
+        balance_plot = plt.subplot(3, 2, 1)
         balance_plot.set_title("Balance")
         df["balance"].plot(legend=True)
 
-        drawdown_plot = plt.subplot(4, 1, 2)
+        closeprice_plot = plt.subplot(3,2, 2)
+        closeprice_plot.set_title("ClosePrice")
+        df["close_price"].plot(legend=True)
+
+        drawdown_plot = plt.subplot(3, 2, 3)
         drawdown_plot.set_title("Drawdown")
         drawdown_plot.fill_between(range(len(df)), df["drawdown"].values)
 
-        pnl_plot = plt.subplot(4, 1, 3)
+        pnl_plot = plt.subplot(3, 2, 4)
         pnl_plot.set_title("Daily Pnl")
         df["net_pnl"].plot(kind="bar", legend=False, grid=False, xticks=[])
 
-        distribution_plot = plt.subplot(4, 1, 4)
+        distribution_plot = plt.subplot(3, 2, 5)
         distribution_plot.set_title("Daily Pnl Distribution")
         df["net_pnl"].hist(bins=50)
+
+
 
         plt.show()
 
@@ -539,8 +548,9 @@ class BacktestingEngine:
 
         # Use multiprocessing pool for running backtesting with different setting
         pool = multiprocessing.Pool(multiprocessing.cpu_count())
-
+        self.output("优化参数组合数:" + str(len(settings)))
         results = []
+        count = 0
         for setting in settings:
             result = (pool.apply_async(optimize, (
                 target_name,
@@ -558,6 +568,8 @@ class BacktestingEngine:
                 self.mode,
                 self.inverse
             )))
+            count += 1
+            self.output("完成计数:" + str(count))
             results.append(result)
 
         pool.close()
@@ -797,7 +809,7 @@ class BacktestingEngine:
                 offset=order.offset,
                 price=trade_price,
                 volume=order.volume,
-                time=self.datetime.strftime("%H:%M:%S"),
+                time=self.datetime.strftime("%Y-%m-%d %H:%M:%S"),
                 gateway_name=self.gateway_name,
             )
             trade.datetime = self.datetime
@@ -874,7 +886,7 @@ class BacktestingEngine:
                 offset=order.offset,
                 price=trade_price,
                 volume=order.volume,
-                time=self.datetime.strftime("%H:%M:%S"),
+                time=self.datetime.strftime("%Y-%m-%d %H:%M:%S"),
                 gateway_name=self.gateway_name,
             )
             trade.datetime = self.datetime
@@ -1052,6 +1064,7 @@ class BacktestingEngine:
         Output message of backtesting engine.
         """
         print(f"{datetime.now()}\t{msg}")
+        self.f.write(f"{datetime.now()}\t{msg}\n")
 
     def get_all_trades(self):
         """

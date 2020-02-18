@@ -80,7 +80,7 @@ class BacktesterEngine(BaseEngine):
         """
         app_path = Path(__file__).parent.parent
         path1 = app_path.joinpath("cta_strategy", "strategies")
-        print(path1)
+        #print(path1)
         self.load_strategy_class_from_folder(
             path1, "vnpy.app.cta_strategy.strategies")
 
@@ -89,7 +89,7 @@ class BacktesterEngine(BaseEngine):
 
         #自定义路径
         path3 = app_path.parent.parent.joinpath("vnpy_slim","strategies")
-        print(path3)
+        #print(path3)
         self.load_strategy_class_from_folder(path3, "vnpy_slim.strategies")
 
     def load_strategy_class_from_folder(self, path: Path, module_name: str = ""):
@@ -99,7 +99,7 @@ class BacktesterEngine(BaseEngine):
         for dirpath, dirnames, filenames in os.walk(path):
             for filename in filenames:
                 # Load python source code file
-                print(filename)
+                #print(filename)
                 if filename.endswith(".py"):
                     strategy_module_name = ".".join(
                         [module_name, filename.replace(".py", "")])
@@ -114,7 +114,7 @@ class BacktesterEngine(BaseEngine):
         """
         Load strategy class from module file.
         """
-        print(module_name)
+        print("load module:", module_name)
         try:
             module = importlib.import_module(module_name)
 
@@ -180,7 +180,7 @@ class BacktesterEngine(BaseEngine):
         engine.load_data()
         engine.run_backtesting()
         self.result_df = engine.calculate_result()
-        self.result_statistics = engine.calculate_statistics(output=False)
+        self.result_statistics = engine.calculate_statistics(output=True)
 
         # Clear thread object handler.
         self.thread = None

@@ -38,7 +38,7 @@ from vnpy.trader.constant import (
 from vnpy.trader.utility import load_json, save_json, extract_vt_symbol, round_to
 from vnpy.trader.database import database_manager
 from vnpy.trader.rqdata import rqdata_client
-from vnpy.trader.tqdata import tqdata_api
+from vnpy.trader.tqdata import TqdataApi
 from vnpy.trader.converter import OffsetConverter
 
 from .base import (
@@ -156,6 +156,7 @@ class CtaEngine(BaseEngine):
             start=start,
             end=end
         )
+        tqdata_api = TqdataApi()
         data = tqdata_api.query_history(req)
         return data
 
@@ -604,12 +605,21 @@ class CtaEngine(BaseEngine):
                 end=end,
             )
 
-        if not bars:
-            #从天勤查询并入库
-            bars = self.query_bar_from_tq(symbol, exchange, interval, start, end)
+        # if not bars:
+        #     #从天勤查询并入库
+        #     bars = self.query_bar_from_tq(symbol, exchange, interval, start, end)
+
+        if not self.check_bar(bars,start,end):
+            raise Exception("Bar time error")
 
         for bar in bars:
             callback(bar)
+
+    def check_bar(self, bars: BarData, start, end):
+        if bars:
+            return True
+        else:
+            return False
 
     def load_tick(
         self,
@@ -811,6 +821,11 @@ class CtaEngine(BaseEngine):
 
         path2 = Path.cwd().joinpath("strategies")
         self.load_strategy_class_from_folder(path2, "strategies")
+
+        #自定义路径
+        path3 = Path(__file__).parent.parent.parent.parent.joinpath("vnpy_slim","strategies")
+        #print(path3)
+        self.load_strategy_class_from_folder(path3, "vnpy_slim.strategies")
 
     def load_strategy_class_from_folder(self, path: Path, module_name: str = ""):
         """

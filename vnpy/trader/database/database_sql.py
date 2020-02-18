@@ -9,56 +9,30 @@ from peewee import (
     DateTimeField,
     FloatField,
     Model,
-    MySQLDatabase,
-    PostgresqlDatabase,
-    SqliteDatabase,
+    #MySQLDatabase,
+    #PostgresqlDatabase,
+    #SqliteDatabase,
     chunked,
 )
 
 from vnpy.trader.constant import Exchange, Interval
-from vnpy.trader.object import BarData, TickData
-from vnpy.trader.utility import get_file_path
+from vnpy.trader.object import BarData, TickData, TradeData
+#from vnpy.trader.utility import get_file_path
 from .database import BaseDatabaseManager, Driver
+#from vnpy.trader.database.initialize import database_db
 
-
-def init(driver: Driver, settings: dict):
-    init_funcs = {
-        Driver.SQLITE: init_sqlite,
-        Driver.MYSQL: init_mysql,
-        Driver.POSTGRESQL: init_postgresql,
-    }
-    assert driver in init_funcs
-
-    db = init_funcs[driver](settings)
-    bar, tick = init_models(db, driver)
-    return SqlManager(bar, tick)
-
-
-def init_sqlite(settings: dict):
-    database = settings["database"]
-    path = str(get_file_path(database))
-    db = SqliteDatabase(path)
-    return db
-
-
-def init_mysql(settings: dict):
-    keys = {"database", "user", "password", "host", "port"}
-    settings = {k: v for k, v in settings.items() if k in keys}
-    db = MySQLDatabase(**settings)
-    return db
-
-
-def init_postgresql(settings: dict):
-    keys = {"database", "user", "password", "host", "port"}
-    settings = {k: v for k, v in settings.items() if k in keys}
-    db = PostgresqlDatabase(**settings)
-    return db
-
+def init(db: Database, driver: Driver):
+    global g_db
+    g_db = db
+    bar, tick, trade, bar_calc = init_models(db, driver)
+    return SqlManager(db, bar, tick, trade, bar_calc)
 
 class ModelBase(Model):
 
     def to_dict(self):
         return self.__data__
+
+
 
 
 def init_models(db: Database, driver: Driver):
@@ -70,10 +44,10 @@ def init_models(db: Database, driver: Driver):
         """
 
         id = AutoField()
-        symbol: str = CharField()
-        exchange: str = CharField()
+        symbol: str = CharField(max_length=32)
+        exchange: str = CharField(max_length=32)
         datetime: datetime = DateTimeField()
-        interval: str = CharField()
+        interval: str = CharField(max_length=32)
 
         volume: float = FloatField()
         open_interest: float = FloatField()
@@ -157,11 +131,11 @@ def init_models(db: Database, driver: Driver):
 
         id = AutoField()
 
-        symbol: str = CharField()
-        exchange: str = CharField()
+        symbol: str = CharField(max_length=32)
+        exchange: str = CharField(max_length=32)
         datetime: datetime = DateTimeField()
 
-        name: str = CharField()
+        name: str = CharField(max_length=32)
         volume: float = FloatField()
         open_interest: float = FloatField()
         last_price: float = FloatField()
@@ -319,16 +293,151 @@ def init_models(db: Database, driver: Driver):
                     for c in chunked(dicts, 50):
                         DbTickData.insert_many(c).on_conflict_replace().execute()
 
+    class DbTradeData(ModelBase):
+
+        id = AutoField()
+        symbol: str = CharField(max_length=32)
+        exchange: str = CharField(max_length=32)
+        orderid: str = CharField(max_length=32)
+        tradeid: str = CharField(max_length=32)
+        direction: str = CharField(max_length=32)
+        offset: str = CharField(max_length=32)
+        price: float = FloatField()
+        volume: float = FloatField()
+        time: str = CharField(max_length=32)
+        v0: float = CharField(max_length=32)
+        v1: float = CharField(max_length=32)
+        v2: float = CharField(max_length=32)
+        v3: float = CharField(max_length=32)
+        v4: float = CharField(max_length=32)
+        v5: float = CharField(max_length=32)
+        v6: float = CharField(max_length=32)
+        v7: float = CharField(max_length=32)
+        v8: float = CharField(max_length=32)
+        v9: float = CharField(max_length=32)
+        v10: float = CharField(max_length=32)
+        v11: float = CharField(max_length=32)
+        v12: float = CharField(max_length=32)
+        v13: float = CharField(max_length=32)
+        v14: float = CharField(max_length=32)
+        v15: float = CharField(max_length=32)
+        v16: float = CharField(max_length=32)
+        v17: float = CharField(max_length=32)
+        v18: float = CharField(max_length=32)
+        v19: float = CharField(max_length=32)
+
+        # def init(self):
+        #     self.database_db = g_db
+        #     self.database_db.connect()
+        #     self.database_db.create_tables([DbTradeData])
+
+        # @classmethod
+        # def get_db(cls):
+        #     return cls.database_db
+
+        class Meta:
+            database = db
+            indexes = ((("symbol", "exchange", "time"), False),)
+
+        def from_trade(self, trade: TradeData):
+            """
+            Generate DbTradeData object from TradeData.
+            """
+            self.symbol = trade.symbol
+            self.exchange = trade.exchange.value
+            self.orderid = trade.orderid
+            self.tradeid = trade.tradeid
+            self.direction = trade.direction.value
+            self.offset = trade.offset.value
+            self.price = trade.price
+            self.volume = trade.volume
+            self.time = trade.time
+
+        def from_var(self, var: dict):
+            for n, (k, v) in enumerate(var.items()):
+                exec('self.v{} = {}'.format(n, str(v)))
+
+        def save_trade(self):
+            data = self.to_dict()
+            self.insert(data).execute()
+
+    class DBBarCalcData(ModelBase):
+
+        id = AutoField()
+        symbol: str = CharField(max_length=32)
+        exchange: str = CharField(max_length=32)
+        datetime: datetime = DateTimeField()
+        interval: str = CharField(max_length=32)
+
+        volume: float = FloatField()
+        open_interest: float = FloatField()
+        open_price: float = FloatField()
+        high_price: float = FloatField()
+        low_price: float = FloatField()
+        close_price: float = FloatField()
+        time: str = CharField(max_length=32)
+        v0: float = CharField(max_length=32)
+        v1: float = CharField(max_length=32)
+        v2: float = CharField(max_length=32)
+        v3: float = CharField(max_length=32)
+        v4: float = CharField(max_length=32)
+        v5: float = CharField(max_length=32)
+        v6: float = CharField(max_length=32)
+        v7: float = CharField(max_length=32)
+        v8: float = CharField(max_length=32)
+        v9: float = CharField(max_length=32)
+        v10: float = CharField(max_length=32)
+        v11: float = CharField(max_length=32)
+        v12: float = CharField(max_length=32)
+        v13: float = CharField(max_length=32)
+        v14: float = CharField(max_length=32)
+        v15: float = CharField(max_length=32)
+        v16: float = CharField(max_length=32)
+        v17: float = CharField(max_length=32)
+        v18: float = CharField(max_length=32)
+        v19: float = CharField(max_length=32)
+        class Meta:
+            database = db
+            indexes = ((("symbol", "exchange", "interval", "datetime"), True),)
+
+        def from_bar(self, bar: BarData):
+
+            self.symbol = bar.symbol
+            self.exchange = bar.exchange.value
+            self.datetime = bar.datetime
+            #self.interval = bar.interval.value
+            self.volume = bar.volume
+            self.open_interest = bar.open_interest
+            self.open_price = bar.open_price
+            self.high_price = bar.high_price
+            self.low_price = bar.low_price
+            self.close_price = bar.close_price
+
+        def from_var(self, var: dict):
+            for n, (k, v) in enumerate(var.items()):
+                exec('self.v{} = {}'.format(n, str(v)))
+
+        def save_bar_calc(self):
+            data = self.to_dict()
+            self.insert(data).execute()
+
     db.connect()
-    db.create_tables([DbBarData, DbTickData])
-    return DbBarData, DbTickData
+    db.create_tables([DbBarData, DbTickData, DbTradeData, DBBarCalcData])
+    trade = DbTradeData()
+    bar_calc = DBBarCalcData()
+    trade.truncate_table()
+    bar_calc.truncate_table()
+    return DbBarData, DbTickData, trade, bar_calc
 
 
 class SqlManager(BaseDatabaseManager):
 
-    def __init__(self, class_bar: Type[Model], class_tick: Type[Model]):
+    def __init__(self, db, class_bar: Type[Model], class_tick: Type[Model], trade, bar_calc):
+        self.db = db
         self.class_bar = class_bar
         self.class_tick = class_tick
+        self.db_trade = trade
+        self.db_bar_calc = bar_calc
 
     def load_bar_data(
         self,
@@ -376,6 +485,20 @@ class SqlManager(BaseDatabaseManager):
     def save_tick_data(self, datas: Sequence[TickData]):
         ds = [self.class_tick.from_tick(i) for i in datas]
         self.class_tick.save_all(ds)
+
+    def save_trade_data(self, trade: TradeData, var: dict):
+        self.db_trade.from_trade(trade)
+        self.db_trade.from_var(var)
+        self.db_trade.save_trade()
+
+    def save_bar_calc(
+        self,
+        bar: BarData,
+        var: dict
+    ):
+        self.db_bar_calc.from_bar(bar)
+        self.db_bar_calc.from_var(var)
+        self.db_bar_calc.save_bar_calc()
 
     def get_newest_bar_data(
         self, symbol: str, exchange: "Exchange", interval: "Interval"

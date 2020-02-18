@@ -2,10 +2,11 @@ from abc import ABC, abstractmethod
 from datetime import datetime
 from enum import Enum
 from typing import Optional, Sequence, TYPE_CHECKING
+from vnpy.trader.object import TradeData, BarData
 
 if TYPE_CHECKING:
     from vnpy.trader.constant import Interval, Exchange  # noqa
-    from vnpy.trader.object import BarData, TickData  # noqa
+    from vnpy.trader.object import BarData, TickData, TradeData # noqa
 
 
 class Driver(Enum):
@@ -49,6 +50,22 @@ class BaseDatabaseManager(ABC):
     def save_tick_data(
         self,
         datas: Sequence["TickData"],
+    ):
+        pass
+
+    @abstractmethod
+    def save_trade_data(
+        self,
+        trade: TradeData,
+        var: dict
+    ):
+        pass
+
+    @abstractmethod
+    def save_bar_calc(
+        self,
+        bar: BarData,
+        var: dict
     ):
         pass
 

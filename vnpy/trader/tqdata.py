@@ -16,9 +16,6 @@ INTERVAL_2_SEC_MAP = {
 }
 
 class TqdataApi:
-    def __init__(self):
-        """"""
-        self.api = TqApi(TqSim())
 
     def init(self):
         """"""
@@ -36,10 +33,17 @@ class TqdataApi:
         # 下载从 2018-01-01凌晨6点 到 2018-06-01下午4点 的 cu1805,cu1807,IC1803 分钟线数据，所有数据按 cu1805 的时间对齐
         # 例如 cu1805 夜盘交易时段, IC1803 的各项数据为 N/A
         # 例如 cu1805 13:00-13:30 不交易, 因此 IC1803 在 13:00-13:30 之间的K线数据会被跳过
-        download_task = DataDownloader(self.api, symbol_list=[exchange.value + '.' + symbol],
-                                                  dur_sec=INTERVAL_2_SEC_MAP[interval],
-                                                  start_dt=start_dt, end_dt=end_dt,
-                                                  csv_file_name=csv_file_name)
+        with TqApi(TqSim()) as api:
+            download_task = DataDownloader(api, symbol_list=[exchange.value + '.' + symbol],
+                                           dur_sec=INTERVAL_2_SEC_MAP[interval],
+                                           start_dt=start_dt, end_dt=end_dt,
+                                           csv_file_name=csv_file_name)
+            # 使用with closing机制确保下载完成后释放对应的资源
+            with closing(api):
+                while not download_task.is_finished():
+                    self.api.wait_update()
+                    print("tq download progress: ", "%.2f%%" % download_task.get_progress())
+
 
         # download_tasks["cu_min"] = DataDownloader(api, symbol_list=["SHFE.cu1803"], dur_sec=60,
         #                                           start_dt=datetime(2017, 3, 1, 6, 0, 0), end_dt=datetime(2018, 4, 1, 6, 0, 0),
@@ -53,11 +57,7 @@ class TqdataApi:
         # download_tasks["T_tick"] = DataDownloader(api, symbol_list=["SHFE.cu1801"], dur_sec=0,
         #                                           start_dt=datetime(2017, 1, 1), end_dt=datetime(2018, 1, 1),
         #                                           csv_file_name="SHFE.cu1801_tick.csv")
-        # 使用with closing机制确保下载完成后释放对应的资源
-        with closing(self.api):
-            while not download_task.is_finished():
-                self.api.wait_update()
-                print("tq download progress: ", "%.2f%%" % download_task.get_progress())
+
 
 
     def data_csv2db(self, symbol:str, exchange:Exchange, interval:Interval, start_dt:datetime, end_dt:datetime):
@@ -91,8 +91,6 @@ class TqdataApi:
         start = req.start
         end = req.end
 
-        self.download_bar(symbol=symbol, exchange=exchange, interval=interval, start_dt=start, end_dt=end)
-        self.data_csv2db(symbol=symbol, exchange=exchange, interval=interval, start_dt=start, end_dt=end)
         bars = database_manager.load_bar_data(
             symbol=symbol,
             exchange=exchange,
@@ -100,6 +98,18 @@ class TqdataApi:
             start=start,
             end=end,
         )
+
+        if not bars:
+            self.download_bar(symbol=symbol, exchange=exchange, interval=interval, start_dt=start, end_dt=end)
+            self.data_csv2db(symbol=symbol, exchange=exchange, interval=interval, start_dt=start, end_dt=end)
+            bars = database_manager.load_bar_data(
+                symbol=symbol,
+                exchange=exchange,
+                interval=interval,
+                start=start,
+                end=end,
+            )
+
         return bars
 
 tqdata_api = TqdataApi()

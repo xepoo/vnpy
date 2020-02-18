@@ -145,3 +145,21 @@ class Interval(Enum):
     HOUR = "1h"
     DAILY = "d"
     WEEKLY = "w"
+
+def convert_interval(interval:int):
+    if interval == 60:
+        return Interval.MINUTE
+    elif interval == 3600:
+        return Interval.HOUR
+    elif interval == 86400:
+        return Interval.DAILY
+    else:
+        return None
+
+# class Interval(Enum):
+#     """
+#     Interval of bar data.
+#     """
+#     MINUTE = 60
+#     HOUR = 3600
+#     DAILY = 86400

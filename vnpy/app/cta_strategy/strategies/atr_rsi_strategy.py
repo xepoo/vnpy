@@ -82,6 +82,7 @@ class AtrRsiStrategy(CtaTemplate):
         """
         Callback of new bar data update.
         """
+        #为了不判断是否撤单，直接全部撤单，太粗暴
         self.cancel_all()
 
         am = self.am
@@ -103,6 +104,10 @@ class AtrRsiStrategy(CtaTemplate):
                     self.buy(bar.close_price + 5, self.fixed_size)
                 elif self.rsi_value < self.rsi_sell:
                     self.short(bar.close_price - 5, self.fixed_size)
+                # elif self.rsi_value > 90:
+                #     self.short(bar.close_price - 5, self.fixed_size)
+                # elif self.rsi_value < 10:
+                #     self.buy(bar.close_price + 5, self.fixed_size)
 
         elif self.pos > 0:
             self.intra_trade_high = max(self.intra_trade_high, bar.high_price)

@@ -72,6 +72,7 @@ class CsvLoaderEngine(BaseEngine):
         reader = csv.DictReader(f)
 
         bars = []
+        bar = None
         start = None
         count = 0
         for item in reader:
@@ -99,11 +100,14 @@ class CsvLoaderEngine(BaseEngine):
             count += 1
             if not start:
                 start = bar.datetime
-        end = bar.datetime
 
         # insert into database
-        database_manager.save_bar_data(bars)
-        return start, end, count
+        if bar:
+            end = bar.datetime
+            database_manager.save_bar_data(bars)
+            return start, end, count
+        else:
+            return None
 
     def load(
         self,

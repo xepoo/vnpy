@@ -32,12 +32,12 @@ SETTINGS = {
     # "database.password": "",
     # "database.authentication_source": "admin",  # for mongodb
 
-    "database.driver": "mongodb",  # see database.Driver
-    "database.database": "",
-    "database.host": "localhost",
-    "database.port": 27017,
-    "database.user": "",
-    "database.password": "",
+    "database.driver": "mysql",  # see database.Driver
+    "database.database": "future_schema",
+    "database.host": "walkright.synology.me",
+    "database.port": 3307, #mongodb 27017
+    "database.user": "root",
+    "database.password": "zaq1xsw2CDE#",
     "database.authentication_source": "admin",  # for mongodb
 }
 

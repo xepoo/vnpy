@@ -10,22 +10,61 @@ from vnpy.trader.engine import MainEngine
 from vnpy.gateway.ctp import CtpGateway
 from vnpy.app.cta_strategy import CtaStrategyApp
 from vnpy.app.cta_strategy.base import EVENT_CTA_LOG
+from vnpy_slim.download_task.download_manage import DownloadManage
 
 SETTINGS["log.active"] = True
 SETTINGS["log.level"] = INFO
 SETTINGS["log.console"] = True
 
 
+# ctp_setting = {
+#     "用户名": "152402",
+#     "密码": "baiyun18",
+#     "经纪商代码": "9999",
+#     "交易服务器": "180.168.146.187:10130",
+#     "行情服务器": "180.168.146.187:10131",
+#     "产品名称": "",
+#     "授权编码": "",
+#     "产品信息": ""
+# }
+
 ctp_setting = {
     "用户名": "152402",
     "密码": "baiyun18",
     "经纪商代码": "9999",
-    "交易服务器": "180.168.146.187:10130",
-    "行情服务器": "180.168.146.187:10131",
-    "产品名称": "",
-    "授权编码": "",
+    "交易服务器": "180.168.146.187:10101",
+    "行情服务器": "180.168.146.187:10111",
+    "产品名称": "simnow_client_test",
+    "授权编码": "0000000000000000",
     "产品信息": ""
 }
+
+strategy_setting = {
+    "RSIStrategy01":{
+        "class_name":"RSIStrategy",
+        "symbol":"m2003",
+        "exchange":"DCE",
+        "setting":{
+            "boll_window": 5,
+            "boll_dev": 1.6,
+            "atr_window": 31,
+            "rsi_f_window": 7,
+            "rsi_l_window": 36,
+            "grow_window": 5,
+            "reduce_window": 6,
+            "sl_multiplier": 7.5,
+            "fixed_size": 5,
+            "db_record": 1
+        }
+    }
+}
+
+def add_strategy(cta_engine):
+    for k,v in strategy_setting.items():
+        cta_engine.add_strategy(class_name=v['class_name'],
+                                strategy_name=k,
+                                vt_symbol=v['symbol'] + '.' + v['exchange'],
+                                setting=v["setting"])
 
 def run_child():
     """
@@ -48,20 +87,8 @@ def run_child():
 
     sleep(10)
     cta_engine.init_engine()
-    #cta_engine.add_strategy(class_name='AtrRsiStrategy', strategy_name='TestStrategy1910', vt_symbol='cu1910.SHFE', setting={})
-    cta_engine.add_strategy(class_name='AtrRsiStrategy', strategy_name='TestStrategy1911', vt_symbol='cu1911.SHFE', setting={})
-    # cta_engine.add_strategy(class_name='AtrRsiStrategy', strategy_name='TestStrategy1912', vt_symbol='cu1912.SHFE', setting={})
-    # cta_engine.add_strategy(class_name='AtrRsiStrategy', strategy_name='TestStrategy2001', vt_symbol='cu2001.SHFE', setting={})
-    # cta_engine.add_strategy(class_name='AtrRsiStrategy', strategy_name='TestStrategy2002', vt_symbol='cu2002.SHFE', setting={})
-    # cta_engine.add_strategy(class_name='AtrRsiStrategy', strategy_name='TestStrategy2003', vt_symbol='cu2003.SHFE', setting={})
-    # cta_engine.add_strategy(class_name='AtrRsiStrategy', strategy_name='TestStrategy2004', vt_symbol='cu2004.SHFE', setting={})
-    # cta_engine.add_strategy(class_name='AtrRsiStrategy', strategy_name='TestStrategy2005', vt_symbol='cu2005.SHFE', setting={})
-    # cta_engine.add_strategy(class_name='AtrRsiStrategy', strategy_name='TestStrategy2006', vt_symbol='cu2006.SHFE', setting={})
-    # cta_engine.add_strategy(class_name='AtrRsiStrategy', strategy_name='TestStrategy2007', vt_symbol='cu2007.SHFE', setting={})
-    # cta_engine.add_strategy(class_name='AtrRsiStrategy', strategy_name='TestStrategy2008', vt_symbol='cu2008.SHFE', setting={})
-    # cta_engine.add_strategy(class_name='AtrRsiStrategy', strategy_name='TestStrategy2009', vt_symbol='cu2009.SHFE', setting={})
+    add_strategy(cta_engine)
     main_engine.write_log("CTA策略初始化完成")
-
     cta_engine.init_all_strategies()
     sleep(60)   # Leave enough time to complete strategy initialization
     main_engine.write_log("CTA策略全部初始化")
@@ -84,7 +111,7 @@ def run_parent():
     DAY_END = time(15, 30)
 
     NIGHT_START = time(20, 45)
-    NIGHT_END = time(2, 45)
+    NIGHT_END = time(11, 30)
 
     child_process = None
 
@@ -117,6 +144,11 @@ def run_parent():
 
         sleep(5)
 
+def run_download():
+    for k,v in strategy_setting.items():
+        load = DownloadManage(symbol=v["symbol"], exchange=v["exchange"], dateauto=True)
+        load.run()
 
 if __name__ == "__main__":
+    run_download()
     run_parent()

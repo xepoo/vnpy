@@ -6,7 +6,7 @@ if TYPE_CHECKING:
 
 if "VNPY_TESTING" not in os.environ:
     from vnpy.trader.setting import get_settings
-    from .initialize import init
+    from .initialize import init, init_db
 
     settings = get_settings("database.")
     database_manager: "BaseDatabaseManager" = init(settings=settings)

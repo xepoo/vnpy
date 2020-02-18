@@ -374,7 +374,13 @@ class ArrayManager(object):
         """
         Simple moving average.
         """
-        result = talib.SMA(self.close, n)
+        try:
+            result = talib.SMA(self.close, n)
+        except:
+            print("testt..........")
+            print(self.close)
+            raise
+
         if array:
             return result
         return result[-1]
