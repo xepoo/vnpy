@@ -56,6 +56,19 @@ strategy_setting = {
             "fixed_size": 5,
             "db_record": 1
         }
+    },
+    "BBreakerStrategy01": {
+        "class_name": "RBreakStrategy",
+        "symbol": "c2003",
+        "exchange": "DCE",
+        "setting": {
+            "setup_coef": 0.25,
+            "break_coef": 0.2,
+            "enter_coef_1": 1.07,
+            "enter_coef_2": 0.07,
+            "fixed_size": 20,
+            "atr_window": 20
+        }
     }
 }
 
