@@ -1,0 +1,83 @@
+2020-02-23 21:15:45.124504	------------------------------
+2020-02-23 21:15:45.124504	首个交易日：	2016-02-02
+2020-02-23 21:15:45.124504	最后交易日：	2019-12-31
+2020-02-23 21:15:45.124504	总交易日：	954
+2020-02-23 21:15:45.124504	盈利交易日：	0
+2020-02-23 21:15:45.124504	亏损交易日：	2
+2020-02-23 21:15:45.124504	起始资金：	1,000,000.00
+2020-02-23 21:15:45.124504	结束资金：	945,014.91
+2020-02-23 21:15:45.124504	总收益率：	-5.50%
+2020-02-23 21:15:45.124504	年化收益：	-1.38%
+2020-02-23 21:15:45.124504	最大回撤: 	-54,985.09
+2020-02-23 21:15:45.124504	百分比最大回撤: -5.50%
+2020-02-23 21:15:45.124504	最长回撤天数: 	80
+2020-02-23 21:15:45.124504	总盈亏：	-54,985.09
+2020-02-23 21:15:45.124504	总手续费：	235.09
+2020-02-23 21:15:45.124504	总滑点：	1,000.00
+2020-02-23 21:15:45.124504	总成交金额：	7,836,250.00
+2020-02-23 21:15:45.124504	总成交笔数：	4
+2020-02-23 21:15:45.124504	日均盈亏：	-57.64
+2020-02-23 21:15:45.124504	日均手续费：	0.25
+2020-02-23 21:15:45.124504	日均滑点：	1.05
+2020-02-23 21:15:45.124504	日均成交金额：	8,214.10
+2020-02-23 21:15:45.124504	日均成交笔数：	0.0041928721174004195
+2020-02-23 21:15:45.124504	日均收益率：	-0.01%
+2020-02-23 21:15:45.124504	收益标准差：	0.18%
+2020-02-23 21:15:45.124504	Sharpe Ratio：	-0.50
+2020-02-23 21:15:45.124504	收益回撤比：	-1.00
+2020-02-23 21:15:53.525721	优化参数组合数:55
+2020-02-23 21:16:24.951030	参数：{'boll_window': 24, 'boll_dev': 1.1, 'atr_window': 39, 'rsi_f_window': 50, 'rsi_l_window': 68, 'grow_window': 9, 'reduce_window': 20, 'sl_multiplier': 7.899999999999997, 'fixed_size': 5}, 目标：460630.74999999994
+2020-02-23 21:16:24.951030	参数：{'boll_window': 24, 'boll_dev': 1.2000000000000002, 'atr_window': 39, 'rsi_f_window': 50, 'rsi_l_window': 68, 'grow_window': 9, 'reduce_window': 20, 'sl_multiplier': 7.899999999999997, 'fixed_size': 5}, 目标：455630.5999999999
+2020-02-23 21:16:24.951030	参数：{'boll_window': 24, 'boll_dev': 1.0, 'atr_window': 39, 'rsi_f_window': 50, 'rsi_l_window': 68, 'grow_window': 9, 'reduce_window': 20, 'sl_multiplier': 7.899999999999997, 'fixed_size': 5}, 目标：444370.7249999999
+2020-02-23 21:16:24.951030	参数：{'boll_window': 24, 'boll_dev': 1.1, 'atr_window': 39, 'rsi_f_window': 50, 'rsi_l_window': 68, 'grow_window': 9, 'reduce_window': 20, 'sl_multiplier': 7.799999999999997, 'fixed_size': 5}, 目标：430611.9875
+2020-02-23 21:16:24.951030	参数：{'boll_window': 24, 'boll_dev': 0.8, 'atr_window': 39, 'rsi_f_window': 50, 'rsi_l_window': 68, 'grow_window': 9, 'reduce_window': 20, 'sl_multiplier': 7.899999999999997, 'fixed_size': 5}, 目标：428104.24999999994
+2020-02-23 21:16:24.951030	参数：{'boll_window': 24, 'boll_dev': 1.2000000000000002, 'atr_window': 39, 'rsi_f_window': 50, 'rsi_l_window': 68, 'grow_window': 9, 'reduce_window': 20, 'sl_multiplier': 7.799999999999997, 'fixed_size': 5}, 目标：425611.8375
+2020-02-23 21:16:24.951030	参数：{'boll_window': 24, 'boll_dev': 0.9, 'atr_window': 39, 'rsi_f_window': 50, 'rsi_l_window': 68, 'grow_window': 9, 'reduce_window': 20, 'sl_multiplier': 7.899999999999997, 'fixed_size': 5}, 目标：424988.1624999999
+2020-02-23 21:16:24.951030	参数：{'boll_window': 24, 'boll_dev': 1.1, 'atr_window': 39, 'rsi_f_window': 50, 'rsi_l_window': 68, 'grow_window': 9, 'reduce_window': 20, 'sl_multiplier': 7.9999999999999964, 'fixed_size': 5}, 目标：424381.83749999997
+2020-02-23 21:16:24.951030	参数：{'boll_window': 24, 'boll_dev': 1.2000000000000002, 'atr_window': 39, 'rsi_f_window': 50, 'rsi_l_window': 68, 'grow_window': 9, 'reduce_window': 20, 'sl_multiplier': 7.9999999999999964, 'fixed_size': 5}, 目标：419381.68749999994
+2020-02-23 21:16:24.951030	参数：{'boll_window': 24, 'boll_dev': 1.0, 'atr_window': 39, 'rsi_f_window': 50, 'rsi_l_window': 68, 'grow_window': 9, 'reduce_window': 20, 'sl_multiplier': 7.799999999999997, 'fixed_size': 5}, 目标：415601.92499999993
+2020-02-23 21:16:24.951030	参数：{'boll_window': 24, 'boll_dev': 1.0, 'atr_window': 39, 'rsi_f_window': 50, 'rsi_l_window': 68, 'grow_window': 9, 'reduce_window': 20, 'sl_multiplier': 7.9999999999999964, 'fixed_size': 5}, 目标：408121.81249999994
+2020-02-23 21:16:24.951030	参数：{'boll_window': 24, 'boll_dev': 0.8, 'atr_window': 39, 'rsi_f_window': 50, 'rsi_l_window': 68, 'grow_window': 9, 'reduce_window': 20, 'sl_multiplier': 7.799999999999997, 'fixed_size': 5}, 目标：399335.44999999995
+2020-02-23 21:16:24.951030	参数：{'boll_window': 24, 'boll_dev': 0.9, 'atr_window': 39, 'rsi_f_window': 50, 'rsi_l_window': 68, 'grow_window': 9, 'reduce_window': 20, 'sl_multiplier': 7.799999999999997, 'fixed_size': 5}, 目标：396219.36249999993
+2020-02-23 21:16:24.951030	参数：{'boll_window': 24, 'boll_dev': 0.8, 'atr_window': 39, 'rsi_f_window': 50, 'rsi_l_window': 68, 'grow_window': 9, 'reduce_window': 20, 'sl_multiplier': 7.9999999999999964, 'fixed_size': 5}, 目标：391855.3374999999
+2020-02-23 21:16:24.951030	参数：{'boll_window': 24, 'boll_dev': 1.1, 'atr_window': 39, 'rsi_f_window': 50, 'rsi_l_window': 68, 'grow_window': 9, 'reduce_window': 20, 'sl_multiplier': 7.6999999999999975, 'fixed_size': 5}, 目标：390613.1
+2020-02-23 21:16:26.946824	参数：{'boll_window': 24, 'boll_dev': 0.9, 'atr_window': 39, 'rsi_f_window': 50, 'rsi_l_window': 68, 'grow_window': 9, 'reduce_window': 20, 'sl_multiplier': 7.9999999999999964, 'fixed_size': 5}, 目标：388739.24999999994
+2020-02-23 21:16:26.947821	参数：{'boll_window': 24, 'boll_dev': 1.2000000000000002, 'atr_window': 39, 'rsi_f_window': 50, 'rsi_l_window': 68, 'grow_window': 9, 'reduce_window': 20, 'sl_multiplier': 7.6999999999999975, 'fixed_size': 5}, 目标：385612.94999999995
+2020-02-23 21:16:26.947821	参数：{'boll_window': 24, 'boll_dev': 1.0, 'atr_window': 39, 'rsi_f_window': 50, 'rsi_l_window': 68, 'grow_window': 9, 'reduce_window': 20, 'sl_multiplier': 7.6999999999999975, 'fixed_size': 5}, 目标：376852.99999999994
+2020-02-23 21:16:26.947821	参数：{'boll_window': 24, 'boll_dev': 0.8, 'atr_window': 39, 'rsi_f_window': 50, 'rsi_l_window': 68, 'grow_window': 9, 'reduce_window': 20, 'sl_multiplier': 7.6999999999999975, 'fixed_size': 5}, 目标：360586.52499999997
+2020-02-23 21:16:26.947821	参数：{'boll_window': 24, 'boll_dev': 0.9, 'atr_window': 39, 'rsi_f_window': 50, 'rsi_l_window': 68, 'grow_window': 9, 'reduce_window': 20, 'sl_multiplier': 7.6999999999999975, 'fixed_size': 5}, 目标：357470.4375
+2020-02-23 21:16:26.947821	参数：{'boll_window': 24, 'boll_dev': 1.1, 'atr_window': 39, 'rsi_f_window': 50, 'rsi_l_window': 68, 'grow_window': 9, 'reduce_window': 20, 'sl_multiplier': 7.599999999999998, 'fixed_size': 5}, 目标：342484.1625
+2020-02-23 21:16:26.947821	参数：{'boll_window': 24, 'boll_dev': 1.2000000000000002, 'atr_window': 39, 'rsi_f_window': 50, 'rsi_l_window': 68, 'grow_window': 9, 'reduce_window': 20, 'sl_multiplier': 7.599999999999998, 'fixed_size': 5}, 目标：337484.01249999995
+2020-02-23 21:16:26.947821	参数：{'boll_window': 24, 'boll_dev': 1.1, 'atr_window': 39, 'rsi_f_window': 50, 'rsi_l_window': 68, 'grow_window': 9, 'reduce_window': 20, 'sl_multiplier': 7.399999999999999, 'fixed_size': 5}, 目标：333093.575
+2020-02-23 21:16:26.947821	参数：{'boll_window': 24, 'boll_dev': 1.0, 'atr_window': 39, 'rsi_f_window': 50, 'rsi_l_window': 68, 'grow_window': 9, 'reduce_window': 20, 'sl_multiplier': 7.599999999999998, 'fixed_size': 5}, 目标：328724.0624999999
+2020-02-23 21:16:26.947821	参数：{'boll_window': 24, 'boll_dev': 1.2000000000000002, 'atr_window': 39, 'rsi_f_window': 50, 'rsi_l_window': 68, 'grow_window': 9, 'reduce_window': 20, 'sl_multiplier': 7.399999999999999, 'fixed_size': 5}, 目标：328093.425
+2020-02-23 21:16:26.947821	参数：{'boll_window': 24, 'boll_dev': 1.0, 'atr_window': 39, 'rsi_f_window': 50, 'rsi_l_window': 68, 'grow_window': 9, 'reduce_window': 20, 'sl_multiplier': 7.399999999999999, 'fixed_size': 5}, 目标：320583.4375
+2020-02-23 21:16:26.947821	参数：{'boll_window': 24, 'boll_dev': 0.8, 'atr_window': 39, 'rsi_f_window': 50, 'rsi_l_window': 68, 'grow_window': 9, 'reduce_window': 20, 'sl_multiplier': 7.599999999999998, 'fixed_size': 5}, 目标：313707.54999999993
+2020-02-23 21:16:26.947821	参数：{'boll_window': 24, 'boll_dev': 1.1, 'atr_window': 39, 'rsi_f_window': 50, 'rsi_l_window': 68, 'grow_window': 9, 'reduce_window': 20, 'sl_multiplier': 7.499999999999998, 'fixed_size': 5}, 目标：313094.17499999993
+2020-02-23 21:16:26.947821	参数：{'boll_window': 24, 'boll_dev': 0.9, 'atr_window': 39, 'rsi_f_window': 50, 'rsi_l_window': 68, 'grow_window': 9, 'reduce_window': 20, 'sl_multiplier': 7.599999999999998, 'fixed_size': 5}, 目标：310591.4624999999
+2020-02-23 21:16:26.947821	参数：{'boll_window': 24, 'boll_dev': 1.2000000000000002, 'atr_window': 39, 'rsi_f_window': 50, 'rsi_l_window': 68, 'grow_window': 9, 'reduce_window': 20, 'sl_multiplier': 7.499999999999998, 'fixed_size': 5}, 目标：308094.02499999997
+2020-02-23 21:16:26.947821	参数：{'boll_window': 24, 'boll_dev': 0.8, 'atr_window': 39, 'rsi_f_window': 50, 'rsi_l_window': 68, 'grow_window': 9, 'reduce_window': 20, 'sl_multiplier': 7.399999999999999, 'fixed_size': 5}, 目标：306816.88749999995
+2020-02-23 21:16:26.947821	参数：{'boll_window': 24, 'boll_dev': 0.9, 'atr_window': 39, 'rsi_f_window': 50, 'rsi_l_window': 68, 'grow_window': 9, 'reduce_window': 20, 'sl_multiplier': 7.399999999999999, 'fixed_size': 5}, 目标：303700.79999999993
+2020-02-23 21:16:26.947821	参数：{'boll_window': 24, 'boll_dev': 1.0, 'atr_window': 39, 'rsi_f_window': 50, 'rsi_l_window': 68, 'grow_window': 9, 'reduce_window': 20, 'sl_multiplier': 7.499999999999998, 'fixed_size': 5}, 目标：300584.0374999999
+2020-02-23 21:16:26.947821	参数：{'boll_window': 24, 'boll_dev': 1.1, 'atr_window': 39, 'rsi_f_window': 50, 'rsi_l_window': 68, 'grow_window': 9, 'reduce_window': 20, 'sl_multiplier': 7.299999999999999, 'fixed_size': 5}, 目标：290594.85
+2020-02-23 21:16:26.947821	参数：{'boll_window': 24, 'boll_dev': 0.8, 'atr_window': 39, 'rsi_f_window': 50, 'rsi_l_window': 68, 'grow_window': 9, 'reduce_window': 20, 'sl_multiplier': 7.499999999999998, 'fixed_size': 5}, 目标：286817.48749999993
+2020-02-23 21:16:26.947821	参数：{'boll_window': 24, 'boll_dev': 1.2000000000000002, 'atr_window': 39, 'rsi_f_window': 50, 'rsi_l_window': 68, 'grow_window': 9, 'reduce_window': 20, 'sl_multiplier': 7.299999999999999, 'fixed_size': 5}, 目标：285594.69999999995
+2020-02-23 21:16:26.947821	参数：{'boll_window': 24, 'boll_dev': 0.9, 'atr_window': 39, 'rsi_f_window': 50, 'rsi_l_window': 68, 'grow_window': 9, 'reduce_window': 20, 'sl_multiplier': 7.499999999999998, 'fixed_size': 5}, 目标：283701.3999999999
+2020-02-23 21:16:26.947821	参数：{'boll_window': 24, 'boll_dev': 1.0, 'atr_window': 39, 'rsi_f_window': 50, 'rsi_l_window': 68, 'grow_window': 9, 'reduce_window': 20, 'sl_multiplier': 7.299999999999999, 'fixed_size': 5}, 目标：279334.675
+2020-02-23 21:16:26.947821	参数：{'boll_window': 24, 'boll_dev': 1.1, 'atr_window': 39, 'rsi_f_window': 50, 'rsi_l_window': 68, 'grow_window': 9, 'reduce_window': 20, 'sl_multiplier': 7.199999999999999, 'fixed_size': 5}, 目标：273712.8125
+2020-02-23 21:16:26.947821	参数：{'boll_window': 24, 'boll_dev': 1.2000000000000002, 'atr_window': 39, 'rsi_f_window': 50, 'rsi_l_window': 68, 'grow_window': 9, 'reduce_window': 20, 'sl_multiplier': 7.199999999999999, 'fixed_size': 5}, 目标：268712.6625
+2020-02-23 21:16:26.947821	参数：{'boll_window': 24, 'boll_dev': 0.8, 'atr_window': 39, 'rsi_f_window': 50, 'rsi_l_window': 68, 'grow_window': 9, 'reduce_window': 20, 'sl_multiplier': 7.299999999999999, 'fixed_size': 5}, 目标：265568.125
+2020-02-23 21:16:26.947821	参数：{'boll_window': 24, 'boll_dev': 1.0, 'atr_window': 39, 'rsi_f_window': 50, 'rsi_l_window': 68, 'grow_window': 9, 'reduce_window': 20, 'sl_multiplier': 7.199999999999999, 'fixed_size': 5}, 目标：263702.5999999999
+2020-02-23 21:16:26.947821	参数：{'boll_window': 24, 'boll_dev': 0.9, 'atr_window': 39, 'rsi_f_window': 50, 'rsi_l_window': 68, 'grow_window': 9, 'reduce_window': 20, 'sl_multiplier': 7.299999999999999, 'fixed_size': 5}, 目标：262452.0375
+2020-02-23 21:16:26.947821	参数：{'boll_window': 24, 'boll_dev': 0.8, 'atr_window': 39, 'rsi_f_window': 50, 'rsi_l_window': 68, 'grow_window': 9, 'reduce_window': 20, 'sl_multiplier': 7.199999999999999, 'fixed_size': 5}, 目标：249936.04999999993
+2020-02-23 21:16:26.947821	参数：{'boll_window': 24, 'boll_dev': 0.9, 'atr_window': 39, 'rsi_f_window': 50, 'rsi_l_window': 68, 'grow_window': 9, 'reduce_window': 20, 'sl_multiplier': 7.199999999999999, 'fixed_size': 5}, 目标：246819.96249999994
+2020-02-23 21:16:26.947821	参数：{'boll_window': 24, 'boll_dev': 1.1, 'atr_window': 39, 'rsi_f_window': 50, 'rsi_l_window': 68, 'grow_window': 9, 'reduce_window': 20, 'sl_multiplier': 7.1, 'fixed_size': 5}, 目标：216845.99999999997
+2020-02-23 21:16:26.947821	参数：{'boll_window': 24, 'boll_dev': 1.2000000000000002, 'atr_window': 39, 'rsi_f_window': 50, 'rsi_l_window': 68, 'grow_window': 9, 'reduce_window': 20, 'sl_multiplier': 7.1, 'fixed_size': 5}, 目标：211845.84999999998
+2020-02-23 21:16:26.947821	参数：{'boll_window': 24, 'boll_dev': 1.1, 'atr_window': 39, 'rsi_f_window': 50, 'rsi_l_window': 68, 'grow_window': 9, 'reduce_window': 20, 'sl_multiplier': 7.0, 'fixed_size': 5}, 目标：208707.32500000007
+2020-02-23 21:16:26.947821	参数：{'boll_window': 24, 'boll_dev': 1.0, 'atr_window': 39, 'rsi_f_window': 50, 'rsi_l_window': 68, 'grow_window': 9, 'reduce_window': 20, 'sl_multiplier': 7.1, 'fixed_size': 5}, 目标：206835.78749999998
+2020-02-23 21:16:26.947821	参数：{'boll_window': 24, 'boll_dev': 1.2000000000000002, 'atr_window': 39, 'rsi_f_window': 50, 'rsi_l_window': 68, 'grow_window': 9, 'reduce_window': 20, 'sl_multiplier': 7.0, 'fixed_size': 5}, 目标：203707.17500000008
+2020-02-23 21:16:26.947821	参数：{'boll_window': 24, 'boll_dev': 1.0, 'atr_window': 39, 'rsi_f_window': 50, 'rsi_l_window': 68, 'grow_window': 9, 'reduce_window': 20, 'sl_multiplier': 7.0, 'fixed_size': 5}, 目标：198697.11250000005
+2020-02-23 21:16:26.947821	参数：{'boll_window': 24, 'boll_dev': 0.8, 'atr_window': 39, 'rsi_f_window': 50, 'rsi_l_window': 68, 'grow_window': 9, 'reduce_window': 20, 'sl_multiplier': 7.1, 'fixed_size': 5}, 目标：193069.23750000002
+2020-02-23 21:16:26.947821	参数：{'boll_window': 24, 'boll_dev': 0.9, 'atr_window': 39, 'rsi_f_window': 50, 'rsi_l_window': 68, 'grow_window': 9, 'reduce_window': 20, 'sl_multiplier': 7.1, 'fixed_size': 5}, 目标：189953.15000000002
+2020-02-23 21:16:26.947821	参数：{'boll_window': 24, 'boll_dev': 0.8, 'atr_window': 39, 'rsi_f_window': 50, 'rsi_l_window': 68, 'grow_window': 9, 'reduce_window': 20, 'sl_multiplier': 7.0, 'fixed_size': 5}, 目标：186180.52500000008
+2020-02-23 21:16:26.947821	参数：{'boll_window': 24, 'boll_dev': 0.9, 'atr_window': 39, 'rsi_f_window': 50, 'rsi_l_window': 68, 'grow_window': 9, 'reduce_window': 20, 'sl_multiplier': 7.0, 'fixed_size': 5}, 目标：183064.43750000006
