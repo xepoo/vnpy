@@ -17,12 +17,12 @@ load_setting = {
     #     "type":"idx",
     #     "interval":60,
     # },
-    # "玉米主连日": {
-    #     "symbol":"c",
-    #     "exchange":"DCE",
-    #     "type":"main",
-    #     "interval":86400,
-    # },
+    "玉米主连日": {
+        "symbol":"c",
+        "exchange":"DCE",
+        "type":"main",
+        "interval":86400,
+    },
     # "玉米指数日": {
     #     "symbol":"c",
     #     "exchange":"DCE",

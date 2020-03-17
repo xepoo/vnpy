@@ -7,7 +7,8 @@ from vnpy.app.csv_loader import CsvLoaderEngine
 from vnpy.trader.constant import Exchange, Interval
 import os
 from vnpy.trader.object import BarData, HistoryRequest
-CSV_PATH = "D:\\SynologyDrive\\future_data\\"
+
+CSV_PATH = "future_data/"
 
 INTERVAL_2_SEC_MAP = {
     Interval.MINUTE: 60,

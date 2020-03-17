@@ -1,3 +1,5 @@
+#pyinstaller --console --onefile examples/no_ui/run.py
+
 import multiprocessing
 from time import sleep
 from datetime import datetime, time
@@ -44,18 +46,30 @@ strategy_setting = {
         "class_name":"RSIStrategy",
         "symbol":"m2003",
         "exchange":"DCE",
-        "setting":{
+        # "setting":{
+        #     "boll_window": 5,
+        #     "boll_dev": 1.6,
+        #     "atr_window": 31,
+        #     "rsi_f_window": 7,
+        #     "rsi_l_window": 36,
+        #     "grow_window": 5,
+        #     "reduce_window": 6,
+        #     "sl_multiplier": 7.5,
+        #     "fixed_size": 5,
+        #     "db_record": 1
+        # }
+        "setting": {
             "boll_window": 5,
-            "boll_dev": 1.6,
-            "atr_window": 31,
-            "rsi_f_window": 7,
-            "rsi_l_window": 36,
-            "grow_window": 5,
-            "reduce_window": 6,
-            "sl_multiplier": 7.5,
+            "boll_dev": 0.4,
+            "atr_window": 39,
+            "rsi_f_window": 10,
+            "rsi_l_window": 31,
+            "grow_window": 8,
+            "reduce_window": 10,
+            "sl_multiplier": 8.0,
             "fixed_size": 5,
-            "db_record": 1
-        }
+            "bar_size": 100,
+            "db_record": 1}
     },
     "BBreakerStrategy01": {
         "class_name": "RBreakStrategy",
@@ -69,7 +83,7 @@ strategy_setting = {
             "fixed_size": 20,
             "atr_window": 20
         }
-    }
+    },
 }
 
 def add_strategy(cta_engine):

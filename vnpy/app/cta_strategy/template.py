@@ -22,7 +22,7 @@ class CtaTemplate(ABC):
         cta_engine: Any,
         strategy_name: str,
         vt_symbol: str,
-        setting: dict,
+        setting: dict
     ):
         """"""
         self.cta_engine = cta_engine
@@ -198,6 +198,11 @@ class CtaTemplate(ABC):
         """
         if self.trading:
             self.cta_engine.cancel_order(self, vt_orderid)
+
+    def cancel_order_list(self, vt_orderids: list):
+        for orderid in vt_orderids:
+            self.cancel_order(orderid)
+        vt_orderids.clear()
 
     def cancel_all(self):
         """

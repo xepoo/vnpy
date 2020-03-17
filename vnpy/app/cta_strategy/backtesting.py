@@ -3,7 +3,7 @@ from datetime import date, datetime, timedelta
 from typing import Callable
 from itertools import product
 from functools import lru_cache
-from time import time
+from time import time,sleep
 import multiprocessing
 import random
 
@@ -53,8 +53,8 @@ class OptimizationSetting:
             self.params[name] = [start]
             return
 
-        if start >= end:
-            print("参数优化起始点必须小于终止点")
+        if start > end:
+            print("参数优化起始点必须小于终止点,name:"+name+",start:"+str(start)+",end:"+str(end))
             return
 
         if step <= 0:
@@ -206,12 +206,13 @@ class BacktestingEngine:
         """"""
         self.strategy_class = strategy_class
         self.strategy = strategy_class(
-            self, strategy_class.__name__, self.vt_symbol, setting
+            self, strategy_class.__name__, self.vt_symbol, setting#, self.capital
         )
+
 
     def load_data(self):
         """"""
-        self.output("开始加载历史数据")
+        #self.output("开始加载历史数据")
 
         if not self.end:
             self.end = datetime.now()
@@ -285,21 +286,21 @@ class BacktestingEngine:
             self.callback(data)
 
         self.strategy.inited = True
-        self.output("策略初始化完成")
+        #self.output("策略初始化完成")
 
         self.strategy.on_start()
         self.strategy.trading = True
-        self.output("开始回放历史数据")
+        #self.output("开始回放历史数据")
 
         # Use the rest of history data for running backtesting
         for data in self.history_data[ix:]:
             func(data)
 
-        self.output("历史数据回放结束")
+        #self.output("历史数据回放结束")
 
     def calculate_result(self):
         """"""
-        self.output("开始计算逐日盯市盈亏")
+        #self.output("开始计算逐日盯市盈亏")
 
         if not self.trades:
             self.output("成交记录为空，无法计算")
@@ -337,12 +338,12 @@ class BacktestingEngine:
 
         self.daily_df = DataFrame.from_dict(results).set_index("date")
 
-        self.output("逐日盯市盈亏计算完成")
+        #self.output("逐日盯市盈亏计算完成")
         return self.daily_df
 
     def calculate_statistics(self, df: DataFrame = None, output=True):
         """"""
-        self.output("开始计算策略统计指标")
+        #self.output("开始计算策略统计指标")
 
         # Check DataFrame input exterior
         if df is None:
@@ -548,11 +549,15 @@ class BacktestingEngine:
 
         # Use multiprocessing pool for running backtesting with different setting
         pool = multiprocessing.Pool(multiprocessing.cpu_count())
-        self.output("优化参数组合数:" + str(len(settings)))
+        queue = multiprocessing.Manager().Queue()
+        sum = len(settings)
+        self.output("优化参数组合数:" + str(sum))
         results = []
         count = 0
+        last_rate = 0
         for setting in settings:
             result = (pool.apply_async(optimize, (
+                queue,
                 target_name,
                 self.strategy_class,
                 setting,
@@ -568,23 +573,36 @@ class BacktestingEngine:
                 self.mode,
                 self.inverse
             )))
-            count += 1
-            self.output("完成计数:" + str(count))
-            results.append(result)
+            # count += 1
+            #
+            # rate = int(count/sum*100)
+            # if rate > last_rate:
+            #     last_rate = rate
+            #     self.output("完成进度:" + str(last_rate))
+            # results.append(result)
 
         pool.close()
-        pool.join()
+        #pool.join()
 
+        while True:
+            result = queue.get()
+            results.append(result)
+            count += 1
+            sleep(0.1)
+            print("\r进度为：%.2f %%" % (count * 100 / sum), end="")
+            if count >= sum:
+                break
+        print("\n")
         # Sort results and output
-        result_values = [result.get() for result in results]
-        result_values.sort(reverse=True, key=lambda result: result[1])
+        #result_values = [result.get() for result in results]
+        results.sort(reverse=True, key=lambda result: result[1])
 
         if output:
-            for value in result_values:
+            for value in results:
                 msg = f"参数：{value[0]}, 目标：{value[1]}"
                 self.output(msg)
 
-        return result_values
+        return results
 
     def run_ga_optimization(self, optimization_setting: OptimizationSetting, population_size=100, ngen_size=30, output=True):
         """"""
@@ -1174,6 +1192,7 @@ class DailyResult:
 
 
 def optimize(
+    queue,
     target_name: str,
     strategy_class: CtaTemplate,
     setting: dict,
@@ -1215,7 +1234,8 @@ def optimize(
     statistics = engine.calculate_statistics(output=False)
 
     target_value = statistics[target_name]
-    return (str(setting), target_value, statistics)
+    queue.put((str(setting), target_value, statistics))
+    #return (str(setting), target_value, statistics)
 
 
 @lru_cache(maxsize=1000000)

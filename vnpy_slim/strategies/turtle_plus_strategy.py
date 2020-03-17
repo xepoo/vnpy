@@ -17,7 +17,8 @@ from vnpy.app.cta_strategy import (
     TradeData,
     OrderData
 )
-
+from vnpy.trader.constant import Interval
+from vnpy.trader.database import database_manager
 
 ########################################################################
 class TurtleResult(object):
@@ -47,7 +48,6 @@ class TurtleResult(object):
 ########################################################################
 class TurtleSignal(object):
     """"""
-
     # ----------------------------------------------------------------------
     def __init__(self, entryWindow, exitWindow, entryDev,
                  exitDev, rsiWindow, rsiSignal):
@@ -78,7 +78,6 @@ class TurtleSignal(object):
         self.am.update_bar(bar)
         if not self.am.inited:
             return
-
         self.generateSignal(bar)
         self.calculateIndicator()
 
@@ -104,18 +103,18 @@ class TurtleSignal(object):
         """"""
         # 平仓
         if self.unit > 0:
-            if bar.low <= self.exitDown:
+            if bar.low_price <= self.exitDown:
                 self.close(self.exitDown)
         if self.unit < 0:
-            if bar.high >= self.exitUp:
+            if bar.high_price >= self.exitUp:
                 self.close(self.exitUp)
                 # 开仓
         else:
             if self.rsiValue >= (50 + self.rsiSignal):
-                if bar.high >= self.entryUp:
+                if bar.high_price >= self.entryUp:
                     self.open(self.entryUp, 1)
             elif self.rsiValue <= (50 - self.rsiSignal):
-                if bar.low <= self.entryDown:
+                if bar.low_price <= self.entryDown:
                     self.open(self.entryDown, -1)
 
     # ----------------------------------------------------------------------
@@ -152,23 +151,40 @@ class TurtleStrategy(CtaTemplate):
     className = 'TurtleStrategy'
     author = u'用Python的交易员'
 
+    fast_entryWindow = 20
+    fast_exitWindow = 10
+    slow_entryWindow = 50
+    slow_exitWindow = 20
+    entryDev = 1.0
+    exitDev = 0
+    rsiWindow = 80
+    rsiSignal = 10
+    atrWindow = 50
 
     # 策略参数
     initDays = 10  # 初始化数据所用的天数
-    capital = 1000000
+    #capital = 1000000
     tradingUnit = 4
     contractSize = 10
 
+    #是否记录数据库
+    db_record = 0
+
     # 参数列表，保存了参数的名称
-    parameters = []
+    parameters = [
+        "fast_entryWindow",
+        "fast_exitWindow",
+        "slow_entryWindow",
+        "slow_exitWindow",
+        "entryDev",
+        "exitDev",
+        "rsiWindow",
+        "rsiSignal",
+        "atrWindow"
+    ]
 
     # 变量列表，保存了变量的名称
-    variables = ['inited',
-               'trading',
-               'pos',
-               'currentSignal',
-               'atrVolatility'
-               ]
+    variables = []
 
     # 同步列表，保存了需要保存到数据库的变量名称
     syncList = [
@@ -177,20 +193,19 @@ class TurtleStrategy(CtaTemplate):
     ]
 
     # ----------------------------------------------------------------------
-    def __init__(self, ctaEngine, strategy_name, vt_symbol, setting):
+    def __init__(self, ctaEngine, strategy_name, vt_symbol, setting, capital):
         """Constructor"""
-        super().__init__(ctaEngine, strategy_name, vt_symbol, setting)
+        super().__init__(ctaEngine, strategy_name, vt_symbol, setting, capital)
 
-        self.fastSignal = TurtleSignal(20, 10, 1, 0, 14, 10)
-        self.slowSignal = TurtleSignal(50, 20, 1, 0, 14, 10)
+        self.fastSignal = TurtleSignal(self.fast_entryWindow, self.fast_exitWindow, self.entryDev, self.exitDev, self.rsiWindow, self.rsiSignal)
+        self.slowSignal = TurtleSignal(self.slow_entryWindow, self.slow_exitWindow, self.entryDev, self.exitDev, self.rsiWindow, self.rsiSignal)
 
-        self.bg = BarGenerator(self.onBar)
+        self.bg = BarGenerator(self.on_bar)
         self.am = ArrayManager(60)
 
         self.dailyBar = None
         self.currentSignal = ""
 
-        self.atrWindow = 20
         self.atrVolatility = 0
         self.multiplier = 0
 
@@ -200,7 +215,7 @@ class TurtleStrategy(CtaTemplate):
         self.write_log(u'%s策略初始化' % self.className)
 
         # 载入历史数据，并采用回放计算的方式初始化策略数值
-        initData = self.load_bar(self.initDays)
+        self.load_bar(self.initDays)
         # for bar in initData:
         #     self.on_bar(bar)
         #
@@ -284,101 +299,132 @@ class TurtleStrategy(CtaTemplate):
             volume = self.tradingUnit * self.multiplier
 
             # 快速信号
-            if bar.close >= self.fastSignal.entryUp:
-                if (self.fastSignal.getLastPnl() <= 0 and
+            if bar.close_price >= self.fastSignal.entryUp:
+                if (#self.fastSignal.getLastPnl() <= 0 and
                         self.fastSignal.rsiValue >= 50 + self.fastSignal.rsiSignal):
-                    self.buy(bar.high*110/100, volume)
+                    self.buy(bar.close_price*1.01, volume)
                     self.currentSignal = 'fast'
 
-            elif bar.close <= self.fastSignal.entryDown:
-                if (self.fastSignal.getLastPnl() <= 0 and
+            elif bar.close_price <= self.fastSignal.entryDown:
+                if (#self.fastSignal.getLastPnl() <= 0 and
                         self.fastSignal.rsiValue <= 50 - self.slowSignal.rsiSignal):
-                    self.short(bar.low*90/100, volume)
+                    self.short(bar.close_price*0.99, volume)
                     self.currentSignal = 'fast'
 
             # 慢速信号
-            elif bar.close >= self.slowSignal.entryUp:
-                if (self.slowSignal.getLastPnl() <= 0 and
+            elif bar.close_price >= self.slowSignal.entryUp:
+                if (#self.slowSignal.getLastPnl() <= 0 and
                         self.slowSignal.rsiValue >= 50 + self.fastSignal.rsiSignal):
-                    self.buy(bar.high*110/100, volume)
+                    self.buy(bar.close_price*1.01, volume)
                     self.currentSignal = 'slow'
 
-            elif bar.close <= self.slowSignal.entryDown:
-                if (self.slowSignal.getLastPnl() <= 0 and
+            elif bar.close_price <= self.slowSignal.entryDown:
+                if (#self.slowSignal.getLastPnl() <= 0 and
                         self.slowSignal.rsiValue <= 50 - self.fastSignal.rsiSignal):
-                    self.short(bar.low*90/100, volume)
+                    self.short(bar.close_price*0.99, volume)
                     self.currentSignal = 'slow'
 
         # 有多头仓位，则检查卖出平仓
         elif self.pos > 0:
             if self.currentSignal == 'fast':
-                if bar.close <= self.fastSignal.exitDown:
-                    self.sell(bar.low*90/100, self.pos)
+                if bar.close_price <= self.fastSignal.exitDown:
+                    self.sell(bar.close_price*0.99, self.pos)
                     self.currentSignal = ''
             else:
-                if bar.close <= self.slowSignal.exitDown:
-                    self.sell(bar.low*90/100, self.pos)
+                if bar.close_price <= self.slowSignal.exitDown:
+                    self.sell(bar.close_price*0.99, self.pos)
                     self.currentSignal = ''
 
         # 有空头仓位，则检查买入平仓
         else:
             if self.currentSignal == 'fast':
-                if bar.close >= self.fastSignal.exitUp:
-                    self.cover(bar.high*110/100, abs(self.pos))
+                if bar.close_price >= self.fastSignal.exitUp:
+                    self.cover(bar.close_price*1.01, abs(self.pos))
                     self.currentSignal = ''
             else:
-                if bar.close >= self.slowSignal.exitUp:
-                    self.cover(bar.high*110/100, abs(self.pos))
+                if bar.close_price >= self.slowSignal.exitUp:
+                    self.cover(bar.close_price*1.01, abs(self.pos))
                     self.currentSignal = ''
 
+        if self.db_record:
+            database_manager.save_bar_calc(bar, self.get_variables())
+
+        self.put_event()
     # ----------------------------------------------------------------------
-    def onBar(self, bar):
+    def on_bar(self, bar):
         """收到Bar推送（必须由用户继承实现）"""
+        self.cancel_all()
+
+        am = self.am
+        am.update_bar(bar)
+        self.fastSignal.onBar(bar)
+        self.slowSignal.onBar(bar)
+        if not am.inited:
+            return
+
+        if not self.pos:
+            self.atrVolatility = self.am.atr(self.atrWindow)
+            if self.atrVolatility < 0.01:
+                self.atrVolatility = 0.01
+
+            riskValue = self.capital * 0.01
+            multiplier = riskValue / (self.atrVolatility * self.contractSize)
+            self.multiplier = int(round(multiplier, 0))
 
         self.onBarBackTesting(bar)
 
-        newDay = False
-        if not self.dailyBar:
-            newDay = True
-        elif self.dailyBar.datetime.day != bar.datetime.day:
-            newDay = True
-
-            self.fastSignal.onBar(self.dailyBar)
-            self.slowSignal.onBar(self.dailyBar)
-
-            self.am.update_bar(self.dailyBar)
-            if not self.pos:
-                self.atrVolatility = self.am.atr(self.atrWindow)
-
-                riskValue = self.capital * 0.01
-                multiplier = riskValue / (self.atrVolatility * self.contractSize)
-                self.multiplier = int(round(multiplier, 0))
-
-        if newDay:
-            self.dailyBar = BarData()
-            self.dailyBar.datetime = bar.datetime.replace(hour=0, minute=0)
-
-            self.dailyBar.open = bar.open
-            self.dailyBar.high = bar.high
-            self.dailyBar.low = bar.low
-        else:
-            self.dailyBar.high = max(self.dailyBar.high, bar.high)
-            self.dailyBar.low = min(self.dailyBar.low, bar.low)
-
-        self.dailyBar.close = bar.close
+        # newDay = False
+        # if not self.dailyBar:
+        #     newDay = True
+        # elif self.dailyBar.datetime.day != bar.datetime.day:
+        #     newDay = True
+        #
+        #     self.fastSignal.onBar(self.dailyBar)
+        #     self.slowSignal.onBar(self.dailyBar)
+        #
+        #     self.am.update_bar(self.dailyBar)
+        #     if not self.pos:
+        #         self.atrVolatility = self.am.atr(self.atrWindow)
+        #
+        #         riskValue = self.capital * 0.01
+        #         multiplier = riskValue / (self.atrVolatility * self.contractSize)
+        #         self.multiplier = int(round(multiplier, 0))
+        #
+        # if newDay:
+        #     self.dailyBar = BarData(
+        #         symbol=bar.symbol,
+        #         exchange=bar.exchange,
+        #         interval=Interval.DAILY,
+        #         datetime=bar.datetime.replace(hour=0, minute=0),
+        #         gateway_name=bar.gateway_name,
+        #         open_price=bar.open_price,
+        #         high_price=bar.high_price,
+        #         low_price=bar.low_price,
+        #         close_price=bar.close_price,
+        #         open_interest=0
+        #     )
+        # else:
+        #     self.dailyBar.high_price = max(self.dailyBar.high_price, bar.high_price)
+        #     self.dailyBar.low_price = min(self.dailyBar.low_price, bar.low_price)
+        #
+        # self.dailyBar.close_price = bar.close_price
 
     # ----------------------------------------------------------------------
-    def onOrder(self, order):
+    def on_order(self, order):
         """收到委托变化推送（必须由用户继承实现）"""
         pass
 
     # ----------------------------------------------------------------------
-    def onTrade(self, trade):
+    def on_trade(self, trade):
         """成交推送"""
-        pass
+        #数据库记录成交记录，bar记录，variables值
+        if self.db_record:
+            database_manager.save_trade_data(trade, self.get_variables())
+
+        self.put_event()
 
     # ----------------------------------------------------------------------
-    def onStopOrder(self, so):
+    def on_stop_order(self, so):
         """停止单推送"""
         pass
 

@@ -68,7 +68,7 @@ class DataAnalyzerforSklearn(object):
         path = self.exportpath + dataname + ".csv"
         if export2csv == True:
             self.df.to_csv(path, index=True, header=True)
-        return self.df
+        return self
     def df2Barmin(self, inputdf, barmins, crossmin=1, export2csv=False):
         """输入分钟k线dataframe数据，合并多多种数据，例如三分钟/5分钟等，如果开始时间是9点1分，crossmin = 0；如果是9点0分，crossmin为1"""
         dfbarmin = pd.DataFrame()
@@ -193,13 +193,13 @@ class DataAnalyzerforSklearn(object):
     def addTrend(self, inputdf,  trendsetp=6, export2csv=False):
         """以未来6个bar的斜率线性回归为判断分类是否正确"""
         dfTrend = inputdf
-        for i in range(1, len(dfTrend) - trendsetp-1):
-            histRe = np.array(dfTrend["close"])[i:i+trendsetp]
+        for i in range(1, len(dfTrend) - trendsetp - 1):
+            histRe = np.array(dfTrend["close"])[i:i + trendsetp]
             xAixs = np.arange(trendsetp) + 1
             res = st.linregress(y=histRe, x=xAixs)
-            if res.pvalue < self.pValue+0.01:
+            if res.pvalue < self.pValue + 0.01:
                 if res.slope > 0.5:
-                    dfTrend.loc[i,"tradeindictor"] = 1
+                    dfTrend.loc[i, "tradeindictor"] = 1
                 elif res.slope < -0.5:
                     dfTrend.loc[i, "tradeindictor"] = -1
         dfTrend = dfTrend.fillna(0)

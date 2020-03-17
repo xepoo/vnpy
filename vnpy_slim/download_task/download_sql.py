@@ -32,7 +32,7 @@ from tqsdk import TqApi, TqSim
 from tqsdk.tools import DataDownloader
 
 FUTURE_START = datetime(2016,1,1,9)
-FUTURE_PATH = "D:/SynologyDrive/future_data/"
+FUTURE_PATH = "future_data/"
 
 
 
